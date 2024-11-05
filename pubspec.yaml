@@ -1,0 +1,42 @@
+name: blangkis_app
+description: Aplikasi penjualan produk UMKM Blangkis
+
+# Versi aplikasi
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.18.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Dependencies yang dibutuhkan
+  shared_preferences: ^2.0.17
+  url_launcher: ^6.0.20
+  cupertino_icons: ^1.0.3 
+  permission_handler: ^10.0.0 
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # Paket untuk memastikan format dan kualitas kode
+  flutter_lints: ^2.0.1
+  flutter_launcher_icons: ^0.10.0
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo_blankis.png"
+
+# Konfigurasi untuk asset dan font
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/logo_blankis.png
+    - assets/produk1.jpg
+    - assets/produk2.jpg
+    - assets/produk3.jpg
+    - assets/produk4.jpg
