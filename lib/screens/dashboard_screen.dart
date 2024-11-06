@@ -210,7 +210,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void _bukaSms(BuildContext context) async {
-  final String phoneNumber = '+62882006822481';
+  final String phoneNumber = '0882006822481';
   var status = await Permission.sms.status;
 
   if (status.isGranted) {
@@ -242,7 +242,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 }
 
   void _bukaTelepon(BuildContext context) async {
-  final String phoneNumber = '+62882006826730';
+  final String phoneNumber = '+62-882-006-8267-30';
   var status = await Permission.phone.status;
 
   if (status.isGranted) {
