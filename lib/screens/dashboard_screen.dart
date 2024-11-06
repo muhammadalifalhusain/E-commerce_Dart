@@ -12,39 +12,93 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   List<Map<String, dynamic>> produkList = [
-    {
-      "nama": "Blangkon Motif Kumitir",
-      "harga": 50000,
-      "keterangan": "Blangkon Motif Kumitir adalah aksesori tradisional yang terbuat dari bahan berkualitas tinggi dengan desain motif kumitir yang khas. Cocok untuk berbagai acara formal dan santai, blangkon ini akan memberikan sentuhan elegan pada penampilan Anda.",
-      "image": "assets/produk1.jpg",
-    },
-    {
-      "nama": "Blangkon Mataram",
-      "harga": 99000,
-      "keterangan": "Blangkon Mataram hadir dengan iket modang prodo yang klasik. Terbuat dari bahan yang nyaman dan tahan lama, blangkon ini akan menjadi pilihan tepat untuk melengkapi pakaian adat Anda.",
-      "image": "assets/produk2.jpg",
-    },
-    {
-      "nama": "Blangkon Motif Kemiter",
-      "harga": 100000,
-      "keterangan": "Blangkon Motif Kemiter adalah pilihan yang ideal bagi Anda yang menginginkan gaya yang unik dan berbeda. Dengan kombinasi warna yang menarik, blangkon ini cocok untuk acara-acara spesial.",
-      "image": "assets/produk3.jpg",
-    },
-    {
-      "nama": "Blangkon Mataram Premium",
-      "harga": 256000,
-      "keterangan": "Blangkon Mataram Premium adalah produk terbaik kami yang terbuat dari bahan premium dengan motif poleng kawitran. Blangkon ini dirancang untuk memberikan kenyamanan dan keanggunan dalam setiap kesempatan.",
-      "image": "assets/produk4.jpg",
-    },
-  ];
+  {
+    "nama": "Blangkon Motif Kumitir",
+    "harga": 50000,
+    "keterangan": 
+        "Blangkon Motif Kumitir adalah aksesori tradisional yang mencerminkan "
+        "kearifan lokal dengan sentuhan seni yang elegan. Dengan desain motif "
+        "kumitir yang khas, blangkon ini memberikan kesan yang sangat mendalam "
+        "dalam acara adat dan perayaan. Terbuat dari bahan pilihan, nyaman digunakan, "
+        "dan cocok untuk berbagai kesempatan. Dapatkan penampilan yang lebih mewah "
+        "dan anggun dengan Blangkon Motif Kumitir.",
+    "image": "assets/produk1.jpg",
+    "jumlah": 0, // Menambahkan field jumlah
+  },
+  {
+    "nama": "Blangkon Mataram",
+    "harga": 99000,
+    "keterangan": 
+        "Blangkon Mataram hadir dengan iket modang prodo yang menggabungkan "
+        "keunikan budaya Mataram dengan desain modern. Blangkon ini terbuat dari bahan "
+        "berkualitas tinggi, memberikan kesan mewah dan elegan yang cocok untuk berbagai "
+        "acara resmi. Dengan desain yang memikat, Blangkon Mataram membawa kebanggaan budaya "
+        "dalam balutan estetika yang tak lekang oleh waktu.",
+    "image": "assets/produk2.jpg",
+    "jumlah": 0,
+  },
+  {
+    "nama": "Blangkon Motif Kemiter",
+    "harga": 100000,
+    "keterangan": 
+        "Blangkon Motif Kemiter adalah pilihan yang ideal bagi Anda yang ingin tampil "
+        "lebih berkarakter dan eksklusif. Dengan desain motif yang khas, blangkon ini "
+        "memberikan kesan anggun dan berwibawa. Terbuat dari material terbaik, cocok untuk "
+        "digunakan pada acara adat dan upacara penting. Blangkon Motif Kemiter adalah simbol "
+        "kebanggaan budaya dengan kualitas tinggi.",
+    "image": "assets/produk3.jpg",
+    "jumlah": 0,
+  },
+  {
+    "nama": "Blangkon Mataram Premium",
+    "harga": 256000,
+    "keterangan": 
+        "Blangkon Mataram Premium adalah produk terbaik kami yang mengusung konsep "
+        "kemewahan dan keanggunan dalam setiap detailnya. Dengan desain iket modang yang "
+        "terinspirasi dari kebudayaan Mataram, blangkon ini memberikan kesan mewah dan elegan. "
+        "Dibuat dengan bahan berkualitas tinggi dan pengerjaan yang sangat teliti, Blangkon Mataram "
+        "Premium sangat cocok untuk acara formal dan istimewa, memberikan sentuhan prestisius pada "
+        "setiap penampilan Anda.",
+    "image": "assets/produk4.jpg",
+    "jumlah": 0,
+  },
+];
+
+
+  List<Map<String, dynamic>> keranjang = [];
 
   int totalHarga = 0;
 
-  void _tambahKeKeranjang(int harga) {
-    setState(() {
-      totalHarga += harga;
+  void _tambahKeKeranjang(int index) {
+  setState(() {
+    // Mencari apakah produk sudah ada di keranjang
+    bool produkAda = false;
+    for (var item in keranjang) {
+      if (item['nama'] == produkList[index]['nama']) {
+        // Jika produk sudah ada, tambahkan jumlahnya
+        item['jumlah'] += 1;
+        produkAda = true;
+        break;
+      }
+    }
+
+    // Jika produk belum ada di keranjang, tambahkan produk baru
+    if (!produkAda) {
+      keranjang.add({
+        "nama": produkList[index]['nama'],
+        "harga": produkList[index]['harga'],
+        "jumlah": 1, // Set jumlah awal ke 1
+      });
+    }
+
+    // Update total harga dengan casting hasil perkalian menjadi int
+    totalHarga = keranjang.fold<int>(0, (sum, item) {
+      // Pastikan item['harga'] dan item['jumlah'] bertipe int
+      return sum + (item['harga'] as int) * (item['jumlah'] as int);
     });
-  }
+  });
+}
+
 
   void _showKeterangan(BuildContext context, String keterangan, String image) {
     showDialog(
@@ -56,7 +110,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Image.asset(image, width: 100, height: 100), // memanggil gambar produk
+              Image.asset(image, width: 100, height: 100),
               SizedBox(height: 10),
               Text(keterangan, style: TextStyle(color: Colors.white)),
             ],
@@ -73,7 +127,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       },
     );
   }
-
   //popup menu sesuai ketentuan pak ajib
 
   void handleMenuOption(String value) {
@@ -293,7 +346,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => PaymentScreen(totalHarga: totalHarga),
+         builder: (context) => PaymentScreen(
+            totalHarga: totalHarga,
+            keranjang: keranjang, // Kirimkan data keranjang ke PaymentScreen
+          ),
         ),
       );
     } else {
@@ -302,6 +358,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -342,12 +399,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
             return Card(
               color: Color(0xFF0D0D0D),
               child: InkWell(
-                onTap: () => _tambahKeKeranjang(produk["harga"]),
+                onTap: () => _tambahKeKeranjang(index),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     InkWell(
-                      onTap: () => _tambahKeKeranjang(produk["harga"]),
+                      onTap: () => _tambahKeKeranjang(index),
                       child: Image.asset(produk["image"], width: 100, height: 100),
                     ),
                     SizedBox(height: 10),

@@ -3,8 +3,9 @@ import 'nota_screen.dart';
 
 class PaymentScreen extends StatefulWidget {
   final int totalHarga;
+  final List<Map<String, dynamic>> keranjang; // Tambahkan parameter keranjang
 
-  PaymentScreen({required this.totalHarga});
+  PaymentScreen({required this.totalHarga, required this.keranjang}); // Terima parameter keranjang
 
   @override
   _PaymentScreenState createState() => _PaymentScreenState();
@@ -19,26 +20,23 @@ class _PaymentScreenState extends State<PaymentScreen> {
     int jumlahBayar = int.tryParse(_jumlahBayarController.text) ?? 0;
 
     if (jumlahBayar < widget.totalHarga) {
-      
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
             'Maaf, uang Anda kurang!',
-            style: TextStyle(color: Color(0xFFF9B14F)), 
+            style: TextStyle(color: Color(0xFFF9B14F)),
           ),
           backgroundColor: Color.fromARGB(255, 54, 54, 54),
         ),
       );
       setState(() {
-        kembalian = 0; // Set kembalian ke 0 jika uang kurang
+        kembalian = 0;
       });
     } else {
-      // Jika uang cukup
       setState(() {
         kembalian = jumlahBayar - widget.totalHarga;
       });
 
-      // Pindah ke NotaScreen hanya jika uang cukup
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -47,6 +45,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             jumlahBayar: jumlahBayar,
             nama: _namaController.text,
             kembalian: kembalian,
+            keranjang: widget.keranjang,
           ),
         ),
       );
@@ -61,55 +60,73 @@ class _PaymentScreenState extends State<PaymentScreen> {
         backgroundColor: Color(0xFF5B4F07),
       ),
       body: Container(
-        color: Color(0xFF5B4F07), // Background color
+        color: Color(0xFF5B4F07),
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            // Menampilkan daftar produk yang dibeli di atas
             Text(
-              'Total: Rp ${widget.totalHarga}',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFFF9B14F)), // Text color
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: _namaController, // Field untuk nama
-              decoration: InputDecoration(
-                labelText: 'Nama',
-                labelStyle: TextStyle(color: Color(0xFFF9B14F)), // Label color
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFF9B14F)), // Underline color
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFF9B14F)), // Focused underline color
-                ),
-              ),
-              style: TextStyle(color: Colors.white), // Input text color
+              'Produk yang Dibeli:',
+              style: TextStyle(color: Color(0xFFF9B14F), fontSize: 16),
             ),
             SizedBox(height: 10),
+            ...widget.keranjang.map((item) {
+              return ListTile(
+                title: Text('${item['nama']} x${item['jumlah']}'),
+                subtitle: Text('Rp ${item['harga']}'),
+                textColor: Color(0xFFF9B14F),
+              );
+            }).toList(),
+            SizedBox(height: 20),
+
+            // Menampilkan total harga produk
+            Text(
+              'Total: Rp ${widget.totalHarga}',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFFF9B14F)),
+            ),
+            SizedBox(height: 20),
+
+            // Nama pengguna
+            TextField(
+              controller: _namaController,
+              decoration: InputDecoration(
+                labelText: 'Nama',
+                labelStyle: TextStyle(color: Color(0xFFF9B14F)),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFFF9B14F)),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFFF9B14F)),
+                ),
+              ),
+              style: TextStyle(color: Colors.white),
+            ),
+            SizedBox(height: 10),
+
+            // Jumlah bayar
             TextField(
               controller: _jumlahBayarController,
               decoration: InputDecoration(
                 labelText: 'Jumlah Pembayaran',
-                labelStyle: TextStyle(color: Color(0xFFF9B14F)), // Label color
+                labelStyle: TextStyle(color: Color(0xFFF9B14F)),
                 enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFF9B14F)), // Underline color
+                  borderSide: BorderSide(color: Color(0xFFF9B14F)),
                 ),
                 focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFF9B14F)), // Focused underline color
+                  borderSide: BorderSide(color: Color(0xFFF9B14F)),
                 ),
               ),
               keyboardType: TextInputType.number,
-              style: TextStyle(color: Colors.white), // Input text color
+              style: TextStyle(color: Colors.white),
             ),
             SizedBox(height: 20),
+
+            // Tombol bayar
             ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Color(0xFF0D0D0D)), // Optional button color
-              onPressed: () {
-                _hitungKembalian();
-                // Tidak ada navigasi di sini, karena sudah ditangani di dalam _hitungKembalian
-              },
-              child: Text('Bayar', style: TextStyle(color: Color(0xFFF9B14F))), // Button text color
+              style: ElevatedButton.styleFrom(backgroundColor: Color(0xFF0D0D0D)),
+              onPressed: _hitungKembalian,
+              child: Text('Bayar', style: TextStyle(color: Color(0xFFF9B14F))),
             ),
-            SizedBox(height: 20),
           ],
         ),
       ),

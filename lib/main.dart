@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/splash_screen.dart';
+import 'screens/dashboard_screen.dart';
 
 
 void main() {
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
         appBarTheme: AppBarTheme(color: Colors.grey[900]),
         buttonTheme: ButtonThemeData(buttonColor: Colors.white),
       ),
-      home: SplashScreen(),
+      home: DashboardScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
